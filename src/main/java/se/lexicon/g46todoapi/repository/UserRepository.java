@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import se.lexicon.g46todoapi.domain.entity.User;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
 
@@ -19,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, String> {
   @Modifying
   @Query("update User u set u.password = :password where u.email = :email")
   void updatePasswordByEmail(@Param("email") String email, @Param("password") String newPassword);
+
+  Optional<User> findByEmail(String email);
 }

@@ -1,7 +1,10 @@
 package se.lexicon.g46todoapi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import se.lexicon.g46todoapi.converter.RoleConverter;
+import se.lexicon.g46todoapi.converter.UserConverter;
 import se.lexicon.g46todoapi.domain.dto.RoleDTOView;
 import se.lexicon.g46todoapi.domain.dto.UserDTOForm;
 import se.lexicon.g46todoapi.domain.dto.UserDTOView;
@@ -12,26 +15,27 @@ import se.lexicon.g46todoapi.exception.DataNotFoundException;
 import se.lexicon.g46todoapi.repository.RoleRepository;
 import se.lexicon.g46todoapi.repository.UserRepository;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-  // todo: add required dependencies...
+  private final RoleConverter roleConverter;
+  private final UserConverter userConverter;
 
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+  public UserServiceImpl(RoleConverter roleConverter, UserConverter userConverter, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    this.roleConverter = roleConverter;
+    this.userConverter = userConverter;
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
+    this.passwordEncoder = passwordEncoder;
   }
-
 
   @Override
   public UserDTOView register(UserDTOForm userDTOForm) {
@@ -44,15 +48,13 @@ public class UserServiceImpl implements UserService {
     // Retrieve and validate roles
     Set<Role> roleList = userDTOForm.getRoles()
             .stream()
-            .map(
-                    roleDTOForm -> roleRepository.findById(roleDTOForm.getId())
-                            .orElseThrow(() -> new DataNotFoundException("Role is not valid.")))
+            .map(roleDTOForm -> roleRepository.findById(roleDTOForm.getId())
+                 .orElseThrow(() -> new DataNotFoundException("Role is not valid.")))
             .collect(Collectors.toSet());
 
-    // todo: make password to hash
 
     // Convert dto to entity
-    User user = new User(userDTOForm.getEmail(), userDTOForm.getPassword());
+    User user = new User(userDTOForm.getEmail(), passwordEncoder.encode(userDTOForm.getPassword()));
     user.setRoles(roleList);
 
     // Create a new User entity
@@ -62,15 +64,7 @@ public class UserServiceImpl implements UserService {
     UserDTOView dtoView = new UserDTOView();
     dtoView.setEmail(savedUser.getEmail());
 
-    // todo: try to find a way to convert dto to entity and ...
-    Set<RoleDTOView> roleDTOViewList = new HashSet<>();
-    for (Role role: user.getRoles()){
-      RoleDTOView roleDtoView = new RoleDTOView();
-      roleDtoView.setId(role.getId());
-      roleDtoView.setName(role.getName());
-      roleDTOViewList.add(roleDtoView);
-    }
-    dtoView.setRoles(roleDTOViewList);
+    dtoView.setRoles(user.getRoles().stream().map(roleConverter::toRoleDTOView).collect(Collectors.toSet()));
 
     //& return the result
     return dtoView;
@@ -78,19 +72,24 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserDTOView getByEmail(String email) {
-    // todo: implement the method
-    return null;
+    User foundUser = userRepository.findByEmail(email).orElseThrow(() -> new DataNotFoundException("No user found by that email!"));
+
+    return userConverter.toUserDTOView(foundUser);
   }
 
   @Override
   public void disableByEmail(String email) {
-    // todo: implement the method
-
+    if (!userRepository.existsByEmail(email)) {
+      throw new DataNotFoundException("User with that email does not exist!");
+    }
+    userRepository.updateExpiredByEmail(email, true);
   }
 
   @Override
   public void enableByEmail(String email) {
-    // todo: implement the method
-
+    if (!userRepository.existsByEmail(email)) {
+      throw new DataNotFoundException("User with that email does not exist!");
+    }
+    userRepository.updateExpiredByEmail(email, false);
   }
 }
