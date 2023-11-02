@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findByTitle(String title);
+    List<Task> findByTitleContains(String title);
     List<Task> findByPersonId(long id);
 
     List<Task> findByDone(boolean done);
