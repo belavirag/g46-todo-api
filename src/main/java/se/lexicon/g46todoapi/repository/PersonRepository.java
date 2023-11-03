@@ -12,5 +12,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
   @Query("select p from Person p where SIZE(p.tasks) = 0")
   List<Person> findIdlePeople();
+
+  Person update(Person p);
   
 }

@@ -1,6 +1,7 @@
 package se.lexicon.g46todoapi.converter;
 
 import org.springframework.stereotype.Component;
+import se.lexicon.g46todoapi.domain.dto.RoleDTOForm;
 import se.lexicon.g46todoapi.domain.dto.RoleDTOView;
 import se.lexicon.g46todoapi.domain.entity.Role;
 
@@ -20,5 +21,13 @@ public class RoleConverterImpl implements RoleConverter {
   public Role toRoleEntity(RoleDTOView dtoView) {
     return Role.builder().id(dtoView.getId()).name(dtoView.getName()).build();
     //return new Role(dtoView.getId(), dtoView.getName());
+  }
+
+  @Override
+  public Role toRoleEntity(RoleDTOForm dtoForm) {
+    return Role.builder()
+            .id(dtoForm.getId())
+            .name(dtoForm.getName())
+            .build();
   }
 }

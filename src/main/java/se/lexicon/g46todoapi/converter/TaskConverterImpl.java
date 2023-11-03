@@ -2,6 +2,7 @@ package se.lexicon.g46todoapi.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.lexicon.g46todoapi.domain.dto.TaskDTOForm;
 import se.lexicon.g46todoapi.domain.dto.TaskDTOView;
 import se.lexicon.g46todoapi.domain.entity.Task;
 
@@ -30,6 +31,18 @@ public class TaskConverterImpl implements TaskConverter {
                 .deadline(view.getDeadline())
                 .done(view.isDone())
                 .person(personConverter.toPersonEntity(view.getPerson()))
+                .build();
+    }
+
+    @Override
+    public Task toTaskEntity(TaskDTOForm form) {
+        return Task.builder()
+                .id(form.getId())
+                .title(form.getTitle())
+                .description(form.getDescription())
+                .deadline(form.getDeadline())
+                .done(form.isDone())
+                .person(personConverter.toPersonEntity(form.getPerson()))
                 .build();
     }
 }

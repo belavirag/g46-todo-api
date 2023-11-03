@@ -2,6 +2,7 @@ package se.lexicon.g46todoapi.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import se.lexicon.g46todoapi.domain.dto.PersonDTOForm;
 import se.lexicon.g46todoapi.domain.dto.PersonDTOView;
 import se.lexicon.g46todoapi.domain.entity.Person;
 
@@ -31,6 +32,15 @@ public class PersonConverterImpl implements PersonConverter {
                 .name(view.getName())
                 .user(userConverter.toUserEntity(view.getUser()))
                 .tasks(view.getTasks().stream().map(taskConverter::toTaskEntity).collect(Collectors.toList()))
+                .build();
+    }
+
+    @Override
+    public Person toPersonEntity(PersonDTOForm form) {
+        return Person.builder()
+                .id(form.getId())
+                .name(form.getName())
+                .tasks(form.getTasks().stream().map(taskConverter::toTaskEntity).collect(Collectors.toList()))
                 .build();
     }
 }
