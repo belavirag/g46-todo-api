@@ -1,5 +1,6 @@
 package se.lexicon.g46todoapi.service;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.lexicon.g46todoapi.converter.TaskConverter;
@@ -29,14 +30,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Optional<TaskDTOView> create(TaskDTOForm form) {
+    public Optional<TaskDTOView> createOrUpdate(@NonNull TaskDTOForm form) {
         Task task = taskRepository.save(taskConverter.toTaskEntity(form));
-        return Optional.of(taskConverter.toTaskDTOView(task));
-    }
-
-    @Override
-    public Optional<TaskDTOView> update(TaskDTOForm form) {
-        Task task = taskRepository.update(taskConverter.toTaskEntity(form));
         return Optional.of(taskConverter.toTaskDTOView(task));
     }
 }

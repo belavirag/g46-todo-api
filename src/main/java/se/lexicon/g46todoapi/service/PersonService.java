@@ -9,6 +9,4 @@ import java.util.Optional;
 public interface PersonService {
     List<PersonDTOView> getAll();
     Optional<PersonDTOView> findById(Long id);
-    Optional<PersonDTOView> create(PersonDTOForm form);
-    Optional<PersonDTOView> update(PersonDTOForm form);
-}
+    Optional<PersonDTOView> createOrUpdate(PersonDTOForm form);}

@@ -32,14 +32,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Optional<PersonDTOView> create(@NonNull PersonDTOForm form) {
+    public Optional<PersonDTOView> createOrUpdate(@NonNull PersonDTOForm form) {
         Person p = personRepository.save(personConverter.toPersonEntity(form));
-        return Optional.of(personConverter.toPersonDTOView(p));
-    }
-
-    @Override
-    public Optional<PersonDTOView> update(@NonNull PersonDTOForm form) {
-        Person p = personRepository.update(personConverter.toPersonEntity(form));
         return Optional.of(personConverter.toPersonDTOView(p));
     }
 }

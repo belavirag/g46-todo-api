@@ -12,7 +12,6 @@ public interface RoleService {
 
   List<RoleDTOView> getAll();
   Optional<RoleDTOView> findById(Long id);
-  Optional<RoleDTOView> create(RoleDTOForm form);
-  Optional<RoleDTOView> update(RoleDTOForm form);
+  Optional<RoleDTOView> createOrUpdate(RoleDTOForm form);
 
 }

@@ -9,6 +9,5 @@ import java.util.Optional;
 public interface TaskService {
     List<TaskDTOView> getAll();
     Optional<TaskDTOView> findById(Long id);
-    Optional<TaskDTOView> create(TaskDTOForm form);
-    Optional<TaskDTOView> update(TaskDTOForm form);
+    Optional<TaskDTOView> createOrUpdate(TaskDTOForm form);
 }

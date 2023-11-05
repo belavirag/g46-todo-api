@@ -41,14 +41,8 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  public Optional<RoleDTOView> create(@NonNull RoleDTOForm form) {
+  public Optional<RoleDTOView> createOrUpdate(@NonNull RoleDTOForm form) {
     Role role = roleRepository.save(roleConverter.toRoleEntity(form));
-    return Optional.of(roleConverter.toRoleDTOView(role));
-  }
-
-  @Override
-  public Optional<RoleDTOView> update(@NonNull RoleDTOForm form) {
-    Role role = roleRepository.update(roleConverter.toRoleEntity(form));
     return Optional.of(roleConverter.toRoleDTOView(role));
   }
 
