@@ -12,5 +12,6 @@ import java.util.Set;
 public class UserDTOView {
 
   private String email;
+  private boolean expired;
   private Set<RoleDTOView> roles;
 }
