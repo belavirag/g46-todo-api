@@ -23,6 +23,18 @@ public class TaskConverterImpl implements TaskConverter {
     }
 
     @Override
+    public TaskDTOForm toTaskDTOForm(Task task) {
+        return TaskDTOForm.builder()
+                .id(task.getId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .deadline(task.getDeadline())
+                .done(task.isDone())
+                .person(personConverter.toPersonDTOForm(task.getPerson()))
+                .build();
+    }
+
+    @Override
     public Task toTaskEntity(TaskDTOView view) {
         return Task.builder()
                 .id(view.getId())

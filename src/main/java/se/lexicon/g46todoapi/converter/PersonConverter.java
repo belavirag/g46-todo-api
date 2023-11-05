@@ -7,6 +7,7 @@ import se.lexicon.g46todoapi.domain.entity.Person;
 public interface PersonConverter {
     //PersonDTOForm toPersonDTOForm();
     PersonDTOView toPersonDTOView(Person person);
+    PersonDTOForm toPersonDTOForm(Person person);
 
     Person toPersonEntity(PersonDTOView view);
     Person toPersonEntity(PersonDTOForm form);

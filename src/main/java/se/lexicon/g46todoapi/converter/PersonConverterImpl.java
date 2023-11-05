@@ -6,6 +6,7 @@ import se.lexicon.g46todoapi.domain.dto.PersonDTOForm;
 import se.lexicon.g46todoapi.domain.dto.PersonDTOView;
 import se.lexicon.g46todoapi.domain.entity.Person;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Component
@@ -20,8 +21,19 @@ public class PersonConverterImpl implements PersonConverter {
         return PersonDTOView.builder()
                 .id(person.getId())
                 .name(person.getName())
-                .user(userConverter.toUserDTO(person.getUser()))
-                .tasks(person.getTasks().stream().map(taskConverter::toTaskDTOView).collect(Collectors.toList()))
+                .user(userConverter.toUserDTOView(person.getUser()))
+                .tasks(new ArrayList<>())
+                //.tasks(person.getTasks().stream().map(taskConverter::toTaskDTOView).collect(Collectors.toList())) causes stack overflow
+                .build();
+    }
+
+    @Override
+    public PersonDTOForm toPersonDTOForm(Person person) {
+        return PersonDTOForm.builder()
+                .id(person.getId())
+                .name(person.getName())
+                .user(userConverter.toUserDTOForm(person.getUser()))
+                .tasks(person.getTasks().stream().map(taskConverter::toTaskDTOForm).collect(Collectors.toList()))
                 .build();
     }
 
@@ -40,6 +52,7 @@ public class PersonConverterImpl implements PersonConverter {
         return Person.builder()
                 .id(form.getId())
                 .name(form.getName())
+                .user(userConverter.toUserEntity(form.getUser()))
                 .tasks(form.getTasks().stream().map(taskConverter::toTaskEntity).collect(Collectors.toList()))
                 .build();
     }

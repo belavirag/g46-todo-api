@@ -108,6 +108,7 @@ public class UserServiceImpl implements UserService {
     return UserDTOView.builder()
             .email(user.getEmail())
             .roles(roleDTOViews)
+            .expired(user.isExpired())
             .build();
   }
 

@@ -12,6 +12,7 @@ import java.util.List;
 public class PersonDTOForm {
     private Long id;
     private String name;
+    private UserDTOForm user;
     private List<TaskDTOForm> tasks;
 
 }

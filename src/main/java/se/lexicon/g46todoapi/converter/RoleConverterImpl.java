@@ -18,6 +18,14 @@ public class RoleConverterImpl implements RoleConverter {
   }
 
   @Override
+  public RoleDTOForm toRoleDTOForm(Role entity) {
+    return RoleDTOForm.builder()
+            .id(entity.getId())
+            .name(entity.getName())
+            .build();
+  }
+
+  @Override
   public Role toRoleEntity(RoleDTOView dtoView) {
     return Role.builder().id(dtoView.getId()).name(dtoView.getName()).build();
     //return new Role(dtoView.getId(), dtoView.getName());

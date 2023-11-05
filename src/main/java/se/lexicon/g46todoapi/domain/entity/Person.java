@@ -26,14 +26,14 @@ public class Person {
   @JoinColumn(name = "email")
   private User user;
 
-  @OneToMany(mappedBy = "person")
+  @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
   private List<Task> tasks = new ArrayList<>();
 
   public Person(String name) {
     this.name = name;
   }
 
-  public void addTask(Task... tasks) {
+  public Person addTask(Task... tasks) {
     if (Objects.requireNonNull(tasks).length == 0)
       throw new IllegalArgumentException("Tasks is empty.");
 
@@ -43,9 +43,10 @@ public class Person {
         task.setPerson(this);
       }
     }
+    return this;
   }
 
-  public void removeTask(Task... tasks) {
+  public Person removeTask(Task... tasks) {
     if (Objects.requireNonNull(tasks).length == 0)
       throw new IllegalArgumentException("Tasks is empty.");
 
@@ -54,6 +55,7 @@ public class Person {
         task.setPerson(null);
       }
     }
+    return this;
   }
 
 

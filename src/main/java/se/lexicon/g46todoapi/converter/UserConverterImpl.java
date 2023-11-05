@@ -13,10 +13,20 @@ public class UserConverterImpl implements UserConverter {
     @Autowired
     private RoleConverter roleConverter;
     @Override
-    public UserDTOView toUserDTO(User user) {
+    public UserDTOView toUserDTOView(User user) {
         return UserDTOView.builder()
                 .email(user.getEmail())
+                .expired(user.isExpired())
                 .roles(user.getRoles().stream().map(roleConverter::toRoleDTOView).collect(Collectors.toSet()))
+                .build();
+    }
+
+    @Override
+    public UserDTOForm toUserDTOForm(User user) {
+        return UserDTOForm.builder()
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRoles().stream().map(roleConverter::toRoleDTOForm).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -24,6 +34,7 @@ public class UserConverterImpl implements UserConverter {
     public User toUserEntity(UserDTOView view) {
         return User.builder()
                 .email(view.getEmail())
+                .expired(view.isExpired())
                 .roles(view.getRoles().stream().map(roleConverter::toRoleEntity).collect(Collectors.toSet()))
                 .build();
     }
