@@ -1,14 +1,17 @@
 package se.lexicon.g46todoapi.service;
 
+import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.lexicon.g46todoapi.converter.RoleConverter;
+import se.lexicon.g46todoapi.domain.dto.RoleDTOForm;
 import se.lexicon.g46todoapi.domain.dto.RoleDTOView;
 import se.lexicon.g46todoapi.domain.entity.Role;
 import se.lexicon.g46todoapi.repository.RoleRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -30,6 +33,17 @@ public class RoleServiceImpl implements RoleService {
       roleDTOList.add(roleConverter.toRoleDTOView(entity));
     }
     return roleDTOList;
+  }
+
+  @Override
+  public Optional<RoleDTOView> findById(Long id) {
+    return roleRepository.findById(id).map(roleConverter::toRoleDTOView);
+  }
+
+  @Override
+  public Optional<RoleDTOView> createOrUpdate(@NonNull RoleDTOForm form) {
+    Role role = roleRepository.save(roleConverter.toRoleEntity(form));
+    return Optional.of(roleConverter.toRoleDTOView(role));
   }
 
 }
